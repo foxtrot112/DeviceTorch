@@ -20,3 +20,4 @@ void matrix_print(matrix *mat);
 void matrix_fill_kronecker(matrix *mat, u32 size, f32 value);
 void matrix_fill_random(matrix *mat, f32 min_value, f32 max_value);
 
+void matrix_save_cache(matrix *mat);

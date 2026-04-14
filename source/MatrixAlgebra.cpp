@@ -105,3 +105,24 @@ void matrix_fill_random(matrix *mat, f32 min_value, f32 max_value)
         }
     }
 }
+
+void matrix_save_cache(matrix *mat,std::string name,std::string location)
+{
+    std::string fileExtension = ".nncache";
+    std::string path = location + "/" + name + fileExtension;
+      
+    FILE *f = fopen(path.c_str(), "wb");
+    if (!f) return;
+
+    fwrite(&mat->rows, sizeof(int), 1, f);
+    fwrite(&mat->cols, sizeof(int), 1, f);
+    fwrite(mat->data, sizeof(float), mat->rows * mat->cols, f);
+
+    fclose(f);
+}
+
+
+void matrix_load_cache(std::string name,std::string location,matrix *mat)
+{
+    
+}
