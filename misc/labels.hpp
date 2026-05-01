@@ -2,7 +2,7 @@
 
 
 
-#include "../source/MatrixAlgebra.h"
+#include "../source/NN/MatrixAlgebra.h"
 
 #define LABELSIZE 28u
 

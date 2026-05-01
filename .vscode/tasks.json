@@ -1,0 +1,44 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: clang++ build active file",
+            "command": "/usr/bin/clang++",
+            "args": [
+                "-fcolor-diagnostics",
+                "-fansi-escape-codes",
+                "-g",
+                "-I${workspaceFolder}/library/include",
+                "-L${workspaceFolder}/library/dependency",
+                "-Wl,-rpath,${workspaceFolder}/library/dependency",
+                "${workspaceFolder}/source/NN/*.cpp",
+                "${workspaceFolder}/source/Numora/*.cpp",
+                "${workspaceFolder}/misc/*.cpp",
+                "${workspaceFolder}/source/*.cc",
+                "-std=c++20",
+                "-o",
+                "${workspaceFolder}/build/DeviceImagesBuild",
+                "-lglfw3",
+                "-framework",
+                "Cocoa",
+                "-framework",
+                "OpenGL",
+                "-framework",
+                "IOKit",
+                "-framework",
+                "CoreVideo",
+                "-lSDL3"
+
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "compiler: /usr/bin/clang++"
+        }
+    ]
+}

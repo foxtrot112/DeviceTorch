@@ -2,40 +2,39 @@
 
 void TorchWindows::init()
 {
-    if (!glfwInit())
-        return;
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(resolution.width, resolution.height, "DeviceTorch", NULL, NULL);
-    if (!window)
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        glfwTerminate();
-        return;
+        
     }
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
+    window = SDL_CreateWindow("Device",resolution.width,resolution.height,SDL_WINDOW_RESIZABLE);
+    renderer = SDL_CreateRenderer(window,nullptr);
+
 }
 
 void TorchWindows::loop()
 {
-    while (!glfwWindowShouldClose(window))
+    bool running = true;
+    while (running)
     {
-
-        glClearColor(0.1f,0.1,0.1, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        // SDL_Event event;
+        // 3. Handle Events
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_EVENT_QUIT)
+            {
+                running = false;
+            }
+        }
+   
     }
 }
 
 void TorchWindows::clean()
 {
-    glfwTerminate();
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }
 
 void TorchWindows::run()

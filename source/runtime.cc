@@ -1,39 +1,44 @@
 #include <iostream>
+#include "Numora/Numora.hpp"
+
+#include "MLP/Model.hpp"
+
 #include "../misc/labels.hpp"
-#include "../misc/windows.hpp"
-#include "Cost.h"
-#include "model.hh"
 
 int main()
 {
-  TorchWindows Application;
-   HDSModel model;
+  ManageLabelImage data;
 
-   Application.run();
-  //  windows.init();
-  //  windows.loop();
-  //  windows.clean();
-     //model.train();
-     //model.predict(4);
+  CrossEntropyModel ceModel;
+  ceModel.layers = {Layer("1024to128LTMHRD", 1024, 128), Layer("128to64LTMHRD", 128, 64), Layer("64to10LTMHRD", 64, 10)};
 
+  data.fetch_features();
 
+  for (int epoch = 0; epoch < 200; epoch++)
+  {
+    for (int d = 0; d < 10; d++)
+    {
+      for (int v = 0; v < 20; v++)
+      {
+        u32 digit = d;
+        u32 varriant = 0;
 
-  //  ManageLabelImage digitsManager;
-  //   digitsManager.fetch_features();
-  //   std::cout << digitsManager.labelEmbedding.size() << "\n";
-  //   std::cout << digitsManager.labelEmbedding[9].labelEmbedding_number.size() << "\n"; 
-  //   std::cout << digitsManager.labelEmbedding[9].labelEmbedding_number[19].rows << "\n";
-  //  // model.train();
-    //model.predict(9);
+        Numora::Matrix inputs = Numora::Matrix(&data.labelEmbedding[digit].labelEmbedding_number[varriant]);
 
-//    matrix mat1 = matrix_create(10,10);
-//    matrix_fill_kronecker(&mat1,10,1.0);
+        ceModel.forward(inputs);
 
-//    matrix_save_cache(&mat1,"identityTest","keys");
-//    matrix mat2 = matrix_create(10,10);
-//    matrix_load_cache("identityTest","keys",&mat2); 
-   
-//    matrix_print(&mat2);
+        Numora::Matrix hot_labels(10, 1);
+        hot_labels.store(digit, 0, 1.0);
 
-    return 0;
+        std::cout << "The Loss: " << ceModel.crossEntropyLoss(hot_labels) << "\n";
+
+        ceModel.output_values_softmax.debug_print();
+        ceModel.backward(inputs, hot_labels);
+      }
+    }
+    std::cout << "---------------" << "\n";
+    std::cout << "Epoch: " << epoch << "\n";
+  }
+
+  return 0;
 }
