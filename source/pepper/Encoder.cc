@@ -2,10 +2,10 @@
 
 #include "MLP.cc"
 
-class Layer
+class Encoder
 {
 public:
-   MultiLayerPerceptron mlp;
+   
    
   
 };

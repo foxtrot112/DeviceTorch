@@ -43,14 +43,16 @@ public:
       Numora::Matrix kronecker_delta_H = output_values_softmax - hot_labels;
       Numora::Matrix gradient_weight_H = layers[layers.size() - 2].output_values_activated.outer_product(kronecker_delta_H);
 
-      layers[layers.size() - 1].biases = layers[layers.size() - 1].biases - (kronecker_delta_H * learningRate);
-      layers[layers.size() - 1].biases = layers[layers.size() - 1].weights - (gradient_weight_H * learningRate);
+      // layers[layers.size() - 1].biases = layers[layers.size() - 1].biases - (kronecker_delta_H * learningRate);
+      // layers[layers.size() - 1].weights = layers[layers.size() - 1].weights - (gradient_weight_H * learningRate);
 
       layers[layers.size() - 1].save_cache();
 
       std::vector<Numora::Matrix> kronecker_deltas(layers.size());
+      std::vector<Numora::Matrix> gradient_weights(layers.size());
 
       kronecker_deltas[layers.size() - 1] = kronecker_delta_H;
+      gradient_weights[layers.size() - 1] = gradient_weight_H;
 
       for (int l = layers.size() - 2; l >= 0; l--)
       {
@@ -58,19 +60,27 @@ public:
          Numora::Matrix back_chain = NumoraNN::backRelU(layers[l].output_values);
 
          kronecker_deltas[l] = back_chain.element_wise(error_deviation);
-
-         Numora::Matrix previous_activation = layers[l - 1].output_values_activated;
+  
+         Numora::Matrix previous_activation = layers[std::max(l - 1,0)].output_values_activated;
          if (l == 0)
          {
             previous_activation = inputs;
          }
 
          Numora::Matrix gradient_weight_l = previous_activation.outer_product(kronecker_deltas[l]);
+         gradient_weights[l] = gradient_weight_l;
 
          // Gradient Desent
-         layers[l].biases = layers[l].biases - (kronecker_deltas[l] * learningRate);
-         layers[l].biases = layers[l].weights - (gradient_weight_l * learningRate);
 
+
+
+      }
+
+
+      for(int l = 0; l < layers.size(); ++l)
+      {
+         layers[l].biases = layers[l].biases - (kronecker_deltas[l] * learningRate);
+         layers[l].weights = layers[l].weights - (gradient_weights[l] * learningRate);
          layers[l].save_cache();
       }
    }

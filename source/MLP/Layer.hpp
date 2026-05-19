@@ -24,6 +24,8 @@ public:
         weights.fill_random(0.1);
         biases.fill_random(0.1);
 
+        load_cache();
+
     }
     void forward(Numora::Matrix input);
 

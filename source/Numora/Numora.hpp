@@ -49,9 +49,6 @@ namespace Numora
         Matrix operator*(const Matrix &other) const;
         Matrix operator*(const f32 &other) const;
 
-
-  
-        
         Matrix operator+(const Matrix &other) const;
         Matrix operator-(const Matrix &other) const;
        
